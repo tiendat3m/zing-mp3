@@ -1,25 +1,96 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import * as apis from "../apis";
+import icons from "../utils/icons";
+
+const {
+  AiOutlineHeart,
+  MdOutlineMoreHoriz,
+  MdSkipNext,
+  MdSkipPrevious,
+  CiRepeat,
+  CiShuffle,
+  BsPlayCircle,
+  BsPauseCircle,
+} = icons;
 
 const Player = () => {
+  const audioEl = new Audio('')
+  const { curSongId, isPlaying } = useSelector((state) => state.music);
+  const [songInfo, setSongInfo] = useState(null);
+  const [source, setSource] = useState(null);
+  console.log(audioEl)
 
-  const { curSongId } = useSelector(state => state.music)
 
-  console.log(curSongId)
+  useEffect(() => {
+    const fetchDetailSong = async () => {
+      const [res1, res2] = await Promise.all([
+        apis.apiGetDetailSong(curSongId),
+        apis.apiGetSong(curSongId)
+      ])
+      if(res1.data.err === 0) {
+        setSongInfo(res1.data.data)
+      }
+
+      if(res2.data.err === 0) {
+        setSource(res1.data.data['128'])
+      }
+    };
+
+    fetchDetailSong()
+  }, [curSongId]);
+
+  useEffect(() => {
+    // audioEl.play()
+  },[curSongId])
+
+  const handleTogglePlayMusic = () => {
+
+  }
 
   return (
-    <div className='bg-main-400 p-5 h-full flex'>
-        <div className='w-[30%] flex-auto border border-red-400'>
-            detail Song
+    <div className="bg-main-400 px-5 h-full flex">
+      <div className="w-[30%] flex-auto flex items-center gap-3">
+        <img
+          src={songInfo?.thumbnail}
+          alt="thumbnail"
+          className="w-16 h16 object-cover rounded-md"
+        />
+        <div className="flex flex-col ">
+          <span className="font-semibold text-gray-700 text-sm">
+            {songInfo?.title}
+          </span>
+          <span className="text-xs text-gray-500">
+            {songInfo?.artistsNames}
+          </span>
         </div>
-        <div className='w-[40%] flex-auto border border-green-400'>
-            Main Player
+        <div className="flex gap-4 text-gray-500 pl-3">
+          <span>
+            <AiOutlineHeart size={16} />
+          </span>
+          <span>
+            <MdOutlineMoreHoriz size={16} />
+          </span>
         </div>
-        <div className='w-[30%] flex-auto border border-blue-400' >
-            Volume
-        </div>
+      </div>
+      <div className="w-[40%] flex-auto border flex gap-2 items-center justify-center flex-col border-green-400 py-2">
+          <div className="flex gap-8 justify-center items-center">
+            <span className="cursor-pointer" title="Bật phát ngẫu nhiên"><CiShuffle size={24}/></span>
+            <span className="cursor-pointer"><MdSkipPrevious size={24}/></span>
+            <span 
+              className="p-1 hover:text-main-500 cursor-pointer"
+              onClick={handleTogglePlayMusic}
+            >
+              {isPlaying ? <BsPauseCircle size={32}/> : <BsPlayCircle size={32}/>}
+            </span>
+            <span className="cursor-pointer"><MdSkipNext size={24}/></span>
+            <span className="cursor-pointer" title="Bật phát lại tất cả"><CiRepeat size={24}/></span>
+          </div>
+          <div>progress bar</div>
+      </div>
+      <div className="w-[30%] flex-auto border border-blue-400">Volume</div>
     </div>
-  )
-}
+  );
+};
 
-export default Player
+export default Player;
