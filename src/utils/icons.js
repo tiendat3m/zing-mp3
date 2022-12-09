@@ -4,7 +4,7 @@ import { TbChartArcs } from "react-icons/tb";
 import { HiArrowNarrowLeft, HiArrowNarrowRight, HiOutlineSearch } from "react-icons/hi"
 import { AiOutlineHeart } from "react-icons/ai"
 import { CiRepeat, CiShuffle } from "react-icons/ci"
-import { BsPlayCircle, BsPauseCircle } from "react-icons/bs"
+import { BsPlayCircle, BsPauseCircle, BsMusicNoteBeamed, BsDot } from "react-icons/bs"
 
 const icons = {
   MdLibraryMusic,
@@ -22,6 +22,8 @@ const icons = {
   CiShuffle,
   BsPlayCircle,
   BsPauseCircle,
+  BsMusicNoteBeamed,
+  BsDot,
 
 };
 
